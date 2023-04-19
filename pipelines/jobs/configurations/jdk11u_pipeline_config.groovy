@@ -302,9 +302,6 @@ class Config11 {
                         'special.jck.fips',
                         'sanity.openjdk.fips',
                         'extended.openjdk.fips',
-                        'sanity.system.fips',
-                        'extended.system.fips',
-                        'special.system.fips',
                         'dev.jck'
                     ]
             ],

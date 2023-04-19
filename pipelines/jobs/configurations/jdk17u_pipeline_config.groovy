@@ -279,10 +279,7 @@ class Config17 {
                                 'extended.jck.fips',
                                 'special.jck.fips',
                                 'sanity.openjdk.fips',
-                                'extended.openjdk.fips',
-                                'sanity.system.fips',
-                                'extended.system.fips',
-                                'special.system.fips'
+                                'extended.openjdk.fips'
                         ]
                 ],
                 additionalTestLabels: [
