@@ -777,7 +777,7 @@ class Build {
                 if (buildConfig.VARIANT == 'openj9') {
                     filter = "**/ibm-semeru*-j*_${buildConfig.TARGET_OS}_*.tar.gz"
                     nodeFilter = 'sw.tool.signing'
-                    signTool = 'ucl'
+                    signTool = 'garasign'
 
                     if (buildConfig.TARGET_OS == 'windows') {
                         nodeFilter += '&&sw.os.windows'
@@ -801,6 +801,7 @@ class Build {
                         context.string(name: 'VERSION', value: "${versionInfo.major}"),
                         context.string(name: 'SIGN_TOOL', value: "${signTool}"),
                         context.string(name: 'FILTER', value: "${filter}"),
+                        context.string(name: 'CERTIFICATE', value: "PRD0000192key"),
                         ['$class': 'LabelParameterValue', name: 'NODE_LABEL', label: "${nodeFilter}"],
                 ]
 
