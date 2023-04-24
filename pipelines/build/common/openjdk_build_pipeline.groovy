@@ -1168,8 +1168,7 @@ class Build {
                             context.string(name: 'FILTER', value: "${filter}"),
                             context.string(name: 'FULL_VERSION', value: "${versionData.version}"),
                             context.string(name: 'OPERATING_SYSTEM', value: "${buildConfig.TARGET_OS}"),
-                            context.string(name: 'MAJOR_VERSION', value: "${versionData.major}"),
-                            ['$class': 'LabelParameterValue', name: 'NODE_LABEL', label: "${nodeFilter}"]
+                            context.string(name: 'MAJOR_VERSION', value: "${versionData.major}")
                     ]
             context.copyArtifacts(
                     projectName: 'build-scripts/release/sign_installer',
