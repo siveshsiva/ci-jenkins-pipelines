@@ -1128,7 +1128,7 @@ class Build {
         // Execute sign installer job
 
         if (buildConfig.TARGET_OS == 'aix') {
-            nodeFilter = 'ci.role.packaging&&sw.tool.rpm&&sw.tool.signing'
+            def nodeFilter = 'ci.role.packaging&&sw.tool.rpm&&sw.tool.signing'
 
             def signRpmJob = context.build job: 'build-scripts/release/sign_rpm',
                 propagate: true,
