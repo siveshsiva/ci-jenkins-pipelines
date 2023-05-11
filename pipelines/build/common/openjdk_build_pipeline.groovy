@@ -426,11 +426,6 @@ class Build {
                             } else {
                                 additionalTestLabel += '&&sw.tool.docker'
                             }
-                        } else if (testType  == 'dev.external') {
-                            if (additionalTestLabel != '') {
-                                additionalTestLabel += '&&'
-                            }
-                            additionalTestLabel += 'sw.tool.podman&&sw.tool.container.criu&&(sw.os.ubuntu.22||sw.os.rhel.8)'
                         } else if (testType  == 'dev.jck') {
                             if (buildConfig.TARGET_OS == "aix") {
 	                            if (additionalTestLabel != '') {
