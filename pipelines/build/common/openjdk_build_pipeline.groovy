@@ -380,9 +380,11 @@ class Build {
                     context.println "Running test: ${testType}"
                     context.stage("${testType}") {
                         def isFipsTestBuild = false
+                        def rerunIterations = '3'
                         if ("${testType}".contains(".fips")) {
                             testType = testType.replace(".fips","")
                             isFipsTestBuild = true
+                            rerunIterations = '0'
                         }
                         def keep_test_reportdir = buildConfig.KEEP_TEST_REPORTDIR
                         if (("${testType}".contains('openjdk'))) {
@@ -392,6 +394,8 @@ class Build {
                         } else if ("${testType}".contains('jck')) {
                             // Keep test reportdir always for JUnit targets
                             keep_test_reportdir = true
+                        } else if ("${testType}".contains('dev')) {
+                            rerunIterations = '0'
                         }
 
                         def DYNAMIC_COMPILE = false
@@ -414,6 +418,7 @@ class Build {
                         if ("${testType}".contains('external')) {
                             DOCKER_REGISTRY_URL = 'sys-rt-docker-local.artifactory.swg-devops.com'
                             DOCKER_REGISTRY_URL_CREDENTIAL_ID = artifactoryCredential
+                            rerunIterations = '0'
                         }
 
                         def additionalTestLabel = buildConfig.ADDITIONAL_TEST_LABEL
@@ -522,6 +527,7 @@ class Build {
                                             context.string(name: 'VENDOR_TEST_REPOS', value: VENDOR_TEST_REPOS),
                                             context.string(name: 'VENDOR_TEST_BRANCHES', value: VENDOR_TEST_BRANCHES),
                                             context.string(name: 'VENDOR_TEST_DIRS', value: VENDOR_TEST_DIRS),
+                                            context.string(name: 'RERUN_ITERATIONS', value: "${rerunIterations}"),
                                             context.string(name: 'RELATED_NODES', value: relatedNodeLabel), 
                                             context.string(name: 'ADDITIONAL_ARTIFACTS_REQUIRED', value: additionalArtifactsRequired)],
                                             wait: true
