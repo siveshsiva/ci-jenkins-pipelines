@@ -88,7 +88,6 @@ class Config21 {
                 os                  : 'linux',
                 arch                : 's390x',
                 test                : 'default',
-                configureArgs       : '--enable-dtrace',
                 buildArgs           : [
                         'temurin'   : '--create-jre-image --create-sbom'
                 ]
