@@ -153,8 +153,7 @@ class Config17 {
                         'temurin'   : '--create-jre-image'
                 ],
                 configureArgs       : [
-                        'temurin'     : '--enable-dtrace',
-                        'openj9'      : '--enable-dtrace --enable-criu-support --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"'
+                        'openj9'      : '--enable-criu-support --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"'
                 ]
         ],
 
