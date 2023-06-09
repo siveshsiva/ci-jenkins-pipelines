@@ -338,6 +338,7 @@ class Config17 {
                                 'special.system'
                         ],
                         weekly : [
+                                'dev.external',
                                 'extended.openjdk',
                                 'extended.perf',
                                 'extended.jck',
