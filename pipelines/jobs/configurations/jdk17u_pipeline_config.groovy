@@ -32,6 +32,9 @@ class Config17 {
                 dockerCredential    : '9f50c848-8764-440d-b95a-1d295c21713e',
                 test                : 'default',
                 cleanWorkspaceAfterBuild: true,
+                reproducibleCompare : [
+                        'temurin'   : true
+                ],
                 additionalTestLabels: [
                         openj9      : '!(sw.os.cent.6||sw.os.rhel.6)'
                 ],

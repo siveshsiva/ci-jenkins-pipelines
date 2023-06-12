@@ -39,6 +39,7 @@
         "downstream"         : "pipelines/build/common/openjdk_build_pipeline.groovy"
     },
     "testDetails"            : {
+        "enableReproducibleCompare" : false,
         "enableTests"        : true,
         "nightlyDefault"     : [
             "sanity.functional",

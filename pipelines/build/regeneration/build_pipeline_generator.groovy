@@ -247,6 +247,7 @@ node('worker') {
                 }
 
                 config.put('enableTests', (params.containsKey('ENABLE_TESTS')) ? params.ENABLE_TESTS : DEFAULTS_JSON['testDetails']['enableTests'] as Boolean)
+                config.put('enableReproducibleCompare', DEFAULTS_JSON['testDetails']['enableReproducibleCompare'] as Boolean)
                 config.put('enableTestDynamicParallel', DEFAULTS_JSON['testDetails']['enableTestDynamicParallel'] as Boolean)
 
                 config.put('enableInstallers', (params.containsKey('ENABLE_INSTALLERS')) ? params.ENABLE_INSTALLERS : DEFAULTS_JSON['enableInstallers'] as Boolean)

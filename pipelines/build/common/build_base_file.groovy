@@ -39,6 +39,7 @@ class Builder implements Serializable {
     Map<String, ?> DEFAULTS_JSON
     String activeNodeTimeout
     Map<String, List<String>> dockerExcludes
+    boolean enableReproducibleCompare
     boolean enableTests
     boolean enableTestDynamicParallel
     boolean enableInstallers
@@ -124,7 +125,7 @@ class Builder implements Serializable {
         if (additionalBuildArgs) {
             buildArgs += ' ' + additionalBuildArgs
         }
-
+        def enableReproducibleCompare = getReproducibleCompare(platformConfig, variant)
         def testList = getTestList(platformConfig, variant)
 
         def dynamicTestsParameters = getDynamicParams(platformConfig, variant)
@@ -180,6 +181,7 @@ class Builder implements Serializable {
             RELEASE: release,
             PUBLISH_NAME: publishName,
             ADOPT_BUILD_NUMBER: adoptBuildNumber,
+            ENABLE_REPRODUCIBLE_COMPARE: enableReproducibleCompare,
             ENABLE_TESTS: enableTests,
             ENABLE_TESTDYNAMICPARALLEL: enableTestDynamicParallel,
             ENABLE_INSTALLERS: enableInstallers,
@@ -214,6 +216,22 @@ class Builder implements Serializable {
         }
 
         return ''
+    }
+    /*
+    Get reproduciableCompare flag from the build configurations.
+    */
+    Boolean getReproducibleCompare(Map<String, ?> configuration, String variant) {
+        Boolean enableReproducibleCompare = DEFAULTS_JSON['testDetails']['enableReproducibleCompare'] as Boolean
+        if (configuration.containsKey('reproducibleCompare')) {
+            def reproducibleCompare
+            if (isMap(configuration.reproducibleCompare)) {
+                reproducibleCompare = (configuration.enableReproducibleCompare as Map).get(variant)
+            }
+            if (reproducibleCompare != null) {
+                enableReproducibleCompare = reproducibleCompare
+            }
+        }
+        return enableReproducibleCompare
     }
 
     /*
@@ -928,6 +946,7 @@ class Builder implements Serializable {
 
             context.echo "Java: ${javaToBuild}"
             context.echo "OS: ${targetConfigurations}"
+            context.echo "Enable reproducible compare: ${enableReproducibleCompare}"
             context.echo "Enable tests: ${enableTests}"
             context.echo "Enable Installers: ${enableInstallers}"
             context.echo "Enable Signer: ${enableSigner}"
@@ -1151,6 +1170,7 @@ return {
     Map<String, ?> DEFAULTS_JSON,
     String activeNodeTimeout,
     String dockerExcludes,
+    String enableReproducibleCompare,
     String enableTests,
     String enableTestDynamicParallel,
     String enableInstallers,
@@ -1217,6 +1237,7 @@ return {
             DEFAULTS_JSON: DEFAULTS_JSON,
             activeNodeTimeout: activeNodeTimeout,
             dockerExcludes: buildsExcludeDocker,
+            enableReproducibleCompare: Boolean.parseBoolean(enableReproducibleCompare),
             enableTests: Boolean.parseBoolean(enableTests),
             enableTestDynamicParallel: Boolean.parseBoolean(enableTestDynamicParallel),
             enableInstallers: Boolean.parseBoolean(enableInstallers),
