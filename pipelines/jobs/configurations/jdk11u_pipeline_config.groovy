@@ -171,7 +171,7 @@ class Config11 {
             test                : 'default',
             configureArgs       : [
                     'temurin' : '--enable-dtrace=auto',
-                    'openj9' : '--enable-dtrace=auto --without-version-opt  --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"',
+                    'openj9' : '--enable-dtrace=auto  --enable-criu-support --without-version-opt  --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"',
                     'corretto' : '--enable-dtrace=auto',
                     'dragonwell' : '--enable-dtrace=auto --with-extra-cflags=\"-march=armv8.2-a+crypto\" --with-extra-cxxflags=\"-march=armv8.2-a+crypto\"',
                     'bisheng' : '--enable-dtrace=auto --with-extra-cflags=-fstack-protector-strong --with-extra-cxxflags=-fstack-protector-strong --with-jvm-variants=server'
@@ -478,7 +478,7 @@ class Config11 {
             ],
             configureArgs       : [
                     'temurin' : '--enable-dtrace=auto',
-                    'openj9' : '--enable-dtrace=auto --without-version-opt ',
+                    'openj9' : '--enable-dtrace=auto  --enable-criu-support --without-version-opt',
                     'corretto' : '--enable-dtrace=auto',
                     'dragonwell' : '--enable-dtrace=auto --with-extra-cflags=\"-march=armv8.2-a+crypto\" --with-extra-cxxflags=\"-march=armv8.2-a+crypto\"',
                     'bisheng' : '--enable-dtrace=auto --with-extra-cflags=-fstack-protector-strong --with-extra-cxxflags=-fstack-protector-strong --with-jvm-variants=server'
