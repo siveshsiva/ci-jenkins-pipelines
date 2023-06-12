@@ -174,7 +174,7 @@ class Config17 {
                         'openj9'    : '--create-jre-image',
                         'temurin'   : '--create-jre-image --create-sbom'
                 ],
-                configureArgs       : '--enable-dtrace --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"'
+                configureArgs       : '--enable-dtrace  --enable-criu-support --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"'
         ],
 
         aarch64Mac: [
@@ -403,7 +403,7 @@ class Config17 {
                         openj9:  'hw.arch.aarch64 && sw.os.linux'
                 ],
                 configureArgs       : [
-                        openj9      : '--enable-dtrace'
+                        openj9      : '--enable-dtrace  --enable-criu-support'
                 ],
                 additionalFileNameTag: 'IBM',
                 buildArgs : [
