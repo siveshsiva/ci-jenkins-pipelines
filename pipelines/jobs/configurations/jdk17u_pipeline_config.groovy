@@ -398,7 +398,27 @@ class Config17 {
                 dockerImage         : 'adoptopenjdk/centos7_build_image',
                 dockerNode         : 'sw.tool.docker',
                 dockerCredential    : '9f50c848-8764-440d-b95a-1d295c21713e',
-                test                : 'default',
+                test                : [
+                        nightly: [
+                                'sanity.functional',
+                                'extended.functional',
+                                'sanity.openjdk',
+                                'sanity.perf',
+                                'sanity.jck',
+                                'sanity.system',
+                                'special.system'
+                        ],
+                        weekly : [
+                                'dev.external',
+                                'extended.openjdk',
+                                'extended.perf',
+                                'extended.jck',
+                                'extended.system',
+                                'special.functional',
+                                'special.jck',
+                                'sanity.external'
+                        ]
+                ],
                 additionalNodeLabels: [
                         openj9:  'hw.arch.aarch64 && sw.os.linux'
                 ],
