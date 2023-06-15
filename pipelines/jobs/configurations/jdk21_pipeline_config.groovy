@@ -6,7 +6,7 @@ class Config21 {
                 arch                : 'x64',
                 additionalNodeLabels: 'macos10.14',
                 additionalTestLabels: [
-                        openj9      : '!sw.os.osx.10_11'
+                        openj9      : '!sw.os.mac.10_11'
                 ],
                 test                : 'default',
                 configureArgs       : '--enable-dtrace',

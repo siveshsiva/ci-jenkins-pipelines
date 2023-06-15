@@ -4,9 +4,9 @@ class Config19 {
         x64Mac    : [
                 os                  : 'mac',
                 arch                : 'x64',
-                additionalNodeLabels: 'hw.arch.x86 && sw.os.osx.10_15',
+                additionalNodeLabels: 'hw.arch.x86 && sw.os.mac.10_15',
                 additionalTestLabels: [
-                        openj9      : '!sw.os.osx.10_11'
+                        openj9      : '!sw.os.mac.10_11'
                 ],
                 test                : 'default',
                 cleanWorkspaceAfterBuild: true,
