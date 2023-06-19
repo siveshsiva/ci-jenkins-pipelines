@@ -4,7 +4,7 @@ class Config11 {
         x64Mac    : [
             os                  : 'mac',
             arch                : 'x64',
-            additionalNodeLabels : 'ci.project.openj9 && hw.arch.x86 && sw.os.osx.10_15',
+            additionalNodeLabels : 'ci.project.openj9 && hw.arch.x86 && sw.os.mac.10_15',
             test                : 'default',
             configureArgs       : [
                     'openj9'      : '--enable-dtrace=auto  --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"',
@@ -237,7 +237,7 @@ class Config11 {
         x64MacIBM    : [
             os                  : 'mac',
             arch                : 'x64',
-            additionalNodeLabels : 'ci.project.openj9 && hw.arch.x86 && sw.os.osx.10_15',
+            additionalNodeLabels : 'ci.project.openj9 && hw.arch.x86 && sw.os.mac.10_15',
             test                : [
                     nightly: [
                         'sanity.functional',

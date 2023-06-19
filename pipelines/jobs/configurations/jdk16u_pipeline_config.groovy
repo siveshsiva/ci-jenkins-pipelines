@@ -4,7 +4,7 @@ class Config16 {
         x64Mac    : [
                 os                  : 'mac',
                 arch                : 'x64',
-                additionalNodeLabels: 'ci.project.openj9 && hw.arch.x86 && sw.os.osx.10_14',
+                additionalNodeLabels: 'ci.project.openj9 && hw.arch.x86 && sw.os.mac.10_14',
                 test                : 'default',
                 cleanWorkspaceAfterBuild: true,
                 configureArgs       : '--enable-dtrace --with-vendor-name="International Business Machines Corporation" --with-vendor-version-string="16.0.2.0" --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition" --with-vendor-url=https://www.ibm.com/ --with-vendor-bug-url=https://github.com/eclipse-openj9/openj9/issues --with-vendor-vm-bug-url=https://github.com/eclipse-openj9/openj9/issues'

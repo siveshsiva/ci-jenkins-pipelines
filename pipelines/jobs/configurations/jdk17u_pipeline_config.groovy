@@ -4,9 +4,9 @@ class Config17 {
         x64Mac    : [
                 os                  : 'mac',
                 arch                : 'x64',
-                additionalNodeLabels: 'ci.project.openj9 && hw.arch.x86 && sw.os.osx.10_15',
+                additionalNodeLabels: 'ci.project.openj9 && hw.arch.x86 && sw.os.mac.10_15',
                 additionalTestLabels: [
-                        openj9      : '!sw.os.osx.10_11'
+                        openj9      : '!sw.os.mac.10_11'
                 ],
                 test                : 'default',
                 cleanWorkspaceAfterBuild: true,
@@ -235,7 +235,7 @@ class Config17 {
         x64MacIBM    : [
                 os                  : 'mac',
                 arch                : 'x64',
-                additionalNodeLabels : 'ci.project.openj9 && hw.arch.x86 && sw.os.osx.10_15',
+                additionalNodeLabels : 'ci.project.openj9 && hw.arch.x86 && sw.os.mac.10_15',
                 test                : 'default',
                 cleanWorkspaceAfterBuild: true,
                 configureArgs       : [
