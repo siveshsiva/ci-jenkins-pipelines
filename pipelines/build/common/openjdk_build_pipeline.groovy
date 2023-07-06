@@ -394,7 +394,9 @@ class Build {
                         } else if ("${testType}".contains('jck')) {
                             // Keep test reportdir always for JUnit targets
                             keep_test_reportdir = true
-                        } else if ("${testType}".contains('dev')) {
+                        }
+
+                        if ("${testType}".contains('dev')) {
                             rerunIterations = '0'
                         }
 
