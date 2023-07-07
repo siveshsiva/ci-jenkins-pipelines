@@ -4,13 +4,20 @@ class Config21 {
         x64Mac    : [
                 os                  : 'mac',
                 arch                : 'x64',
-                additionalNodeLabels: 'macos10.14',
+                additionalNodeLabels: [
+                        openj9      : 'hw.arch.x86 && sw.os.mac.10_15',
+                        temurin     : 'macos10.14'
+                ],
                 additionalTestLabels: [
                         openj9      : '!sw.os.mac.10_11'
                 ],
                 test                : 'default',
-                configureArgs       : '--enable-dtrace',
+                configureArgs       : [
+                        openj9      : '--enable-dtrace --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"',
+                        temurin     : '--enable-dtrace'
+                ],
                 buildArgs           : [
+                        'openj9'    : '--create-jre-image',
                         'temurin'   : '--create-jre-image --create-sbom'
                 ]
         ],
@@ -22,15 +29,22 @@ class Config21 {
                 dockerFile: [
                         openj9      : 'pipelines/build/dockerFiles/cuda.dockerfile'
                 ],
+                dockerNode          : 'sw.tool.docker && sw.config.uid1000',
+                dockerCredential    : '9f50c848-8764-440d-b95a-1d295c21713e',
                 test                : 'default',
+                cleanWorkspaceAfterBuild: true,
+                additionalNodeLabels: [
+                        openj9      : 'hw.arch.x86 && sw.os.linux'
+                ],
                 additionalTestLabels: [
-                        openj9      : '!(centos6||rhel6)'
+                        openj9      : '!(sw.os.cent.6||sw.os.rhel.6)'
                 ],
                 configureArgs       : [
-                        'openj9'    : '--enable-dtrace',
+                        'openj9'    : '--enable-dtrace --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"',
                         'temurin'   : '--enable-dtrace'
                 ],
                 buildArgs           : [
+                        'openj9'    : '--create-jre-image',
                         'temurin'   : '--create-source-archive --create-jre-image --create-sbom'
                 ]
         ],
@@ -60,9 +74,17 @@ class Config21 {
         x64Windows: [
                 os                  : 'windows',
                 arch                : 'x64',
-                additionalNodeLabels: 'win2022&&vs2019',
+                additionalNodeLabels: [
+                        openj9      : 'hw.arch.x86 && sw.os.windows',
+                        temurin     : 'win2022&&vs2019'
+                ],
+                cleanWorkspaceAfterBuild: true,
                 test                : 'default',
+                configureArgs       : [
+                        openj9      : '--with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition" --with-jdk-rc-name="IBM Semeru Runtime"'
+                ],
                 buildArgs           : [
+                        'openj9'    : '--create-jre-image',
                         'temurin'   : '--create-jre-image --create-sbom'
                 ]
         ],
@@ -72,14 +94,18 @@ class Config21 {
                 arch                : 'ppc64',
                 additionalNodeLabels: [
                         temurin: 'xlc16&&aix720',
-                        openj9:  'xlc16&&aix715'
+                        openj9:  'hw.arch.ppc64 && sw.os.aix.7_2',
                 ],
                 test                : 'default',
                 additionalTestLabels: [
                         temurin      : 'sw.os.aix.7_2'
                 ],
                 cleanWorkspaceAfterBuild: true,
+                configureArgs       : [
+                        openj9      : '--disable-ccache --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"'
+                ],
                 buildArgs           : [
+                        'openj9'    : '--create-jre-image',
                         'temurin'   : '--create-jre-image --create-sbom'
                 ]
         ],
@@ -88,7 +114,16 @@ class Config21 {
                 os                  : 'linux',
                 arch                : 's390x',
                 test                : 'default',
+                cleanWorkspaceAfterBuild: true,
+                additionalNodeLabels: [
+                        openj9      : 'hw.arch.s390x && (sw.os.cent.7 || sw.os.rhel.7)'
+                ],
+                configureArgs       : [
+                        openj9      : '--enable-dtrace --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"',
+                        temurin     : '--enable-dtrace'
+                ],
                 buildArgs           : [
+                        'openj9'    : '--create-jre-image',
                         'temurin'   : '--create-jre-image --create-sbom'
                 ]
         ],
@@ -96,13 +131,17 @@ class Config21 {
         ppc64leLinux    : [
                 os                  : 'linux',
                 arch                : 'ppc64le',
-                dockerImage         : 'adoptopenjdk/centos7_build_image',
                 test                : 'default',
+                cleanWorkspaceAfterBuild: true,
+                additionalNodeLabels: [
+                        openj9      : 'hw.arch.ppc64le && (sw.os.cent.7 || sw.os.rhel.7)'
+                ],
                 configureArgs       : [
-                        'temurin'     : '--enable-dtrace',
-                        'openj9'      : '--enable-dtrace'
+                        'openj9'    : '--enable-dtrace --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"',
+                        'temurin'   : '--enable-dtrace'
                 ],
                 buildArgs           : [
+                        'openj9'    : '--create-jre-image',
                         'temurin'   : '--create-jre-image --create-sbom'
                 ]
         ],
@@ -110,10 +149,20 @@ class Config21 {
         aarch64Linux    : [
                 os                  : 'linux',
                 arch                : 'aarch64',
-                dockerImage         : 'adoptopenjdk/centos7_build_image',
+                additionalNodeLabels: [
+                        openj9      : 'hw.arch.aarch64 && sw.os.linux'
+                ],
+                dockerImage         : 'adoptopenjdk/centos7_build_image@sha256:8947557de41e8b5fb0b0e067144b30f7771b182f0f571c12afad846aed6bc6be',
+                dockerNode          : 'sw.tool.docker',
+                dockerCredential    : '9f50c848-8764-440d-b95a-1d295c21713e',
                 test                : 'default',
-                configureArgs : '--enable-dtrace',
+                configureArgs : [
+                        'openj9'    : '--enable-dtrace --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"',
+                        'temurin'   : '--enable-dtrace'
+                ],
+                cleanWorkspaceAfterBuild: true,
                 buildArgs           : [
+                        'openj9'    : '--create-jre-image',
                         'temurin'   : '--create-jre-image --create-sbom'
                 ]
         ],
@@ -121,9 +170,17 @@ class Config21 {
         aarch64Mac: [
                 os                  : 'mac',
                 arch                : 'aarch64',
-                additionalNodeLabels: 'macos11',
+                additionalNodeLabels: [
+                        openj9      : 'hw.arch.aarch64 && sw.os.mac',
+                        temurin     : 'macos11'
+                ],
+                cleanWorkspaceAfterBuild: true,
                 test                : 'default',
+                configureArgs       : [
+                        openj9      : '--enable-dtrace --disable-warnings-as-errors --with-noncompressedrefs --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"'
+                ],
                 buildArgs           : [
+                        'openj9'    : '--create-jre-image',
                         'temurin'   : '--create-jre-image --create-sbom'
                 ]
         ],
@@ -160,6 +217,129 @@ class Config21 {
                 buildArgs       : [
                         'temurin'   : '--create-jre-image --create-sbom --cross-compile'
                 ]
+        ],
+
+        x64MacIBM    : [
+                os                  : 'mac',
+                arch                : 'x64',
+                additionalNodeLabels: 'hw.arch.x86 && sw.os.mac.10_15'
+                additionalTestLabels: '!sw.os.mac.10_11',
+                test                : 'default',
+                configureArgs       : '--enable-dtrace',
+                additionalFileNameTag: 'IBM',
+                buildArgs           : '--create-jre-image'
+        ],
+
+        x64LinuxIBM  : [
+                os                  : 'linux',
+                arch                : 'x64',
+                dockerImage         : 'adoptopenjdk/centos7_build_image',
+                dockerFile          : 'pipelines/build/dockerFiles/cuda.dockerfile',
+                dockerNode          : 'sw.tool.docker && sw.config.uid1000',
+                dockerCredential    : '9f50c848-8764-440d-b95a-1d295c21713e',
+                test                : [
+                        nightly: [
+                                "sanity.functional",
+                                "extended.functional",
+                                "sanity.openjdk",
+                                "sanity.perf",
+                                "sanity.jck",
+                                "sanity.system",
+                                "special.system"
+                        ],
+                        weekly : [
+                                "extended.openjdk",
+                                "extended.perf",
+                                "extended.jck",
+                                "extended.system",
+                                "special.functional",
+                                "special.jck",
+                                "sanity.external",
+                                "sanity.functional.fips",
+                                "extended.functional.fips",
+                                "special.functional.fips",
+                                "sanity.jck.fips",
+                                "extended.jck.fips",
+                                "special.jck.fips",
+                                "sanity.openjdk.fips",
+                                "extended.openjdk.fips"
+                        ]
+                ],
+                cleanWorkspaceAfterBuild: true,
+                additionalNodeLabels: 'hw.arch.x86 && sw.os.linux',
+                additionalTestLabels: '!(sw.os.cent.6||sw.os.rhel.6)',
+                configureArgs       : '--enable-dtrace',
+                additionalFileNameTag: 'IBM',
+                buildArgs           : '--create-jre-image'
+        ],
+
+        x64WindowsIBM: [
+                os                  : 'windows',
+                arch                : 'x64',
+                additionalNodeLabels: 'hw.arch.x86 && sw.os.windows',
+                cleanWorkspaceAfterBuild: true,
+                test                : 'default',
+                configureArgs       : '--with-jdk-rc-name="IBM Semeru Runtime"',
+                additionalFileNameTag: 'IBM',
+                buildArgs           : '--create-jre-image'
+        ],
+
+        ppc64AixIBM    : [
+                os                  : 'aix',
+                arch                : 'ppc64',
+                additionalNodeLabels: 'hw.arch.ppc64 && sw.os.aix.7_2',
+                test                : 'default',
+                cleanWorkspaceAfterBuild: true,
+                configureArgs       : '--disable-ccache',
+                additionalFileNameTag: 'IBM',
+                buildArgs           : '--create-jre-image'
+        ],
+
+        s390xLinuxIBM    : [
+                os                  : 'linux',
+                arch                : 's390x',
+                test                : 'default',
+                cleanWorkspaceAfterBuild: true,
+                additionalNodeLabels: 'hw.arch.s390x && (sw.os.cent.7 || sw.os.rhel.7)',
+                configureArgs       : '--enable-dtrace',
+                additionalFileNameTag: 'IBM',
+                buildArgs           : '--create-jre-image'
+        ],
+
+        ppc64leLinuxIBM    : [
+                os                  : 'linux',
+                arch                : 'ppc64le',
+                test                : 'default',
+                cleanWorkspaceAfterBuild: true,
+                additionalNodeLabels: 'hw.arch.ppc64le && (sw.os.cent.7 || sw.os.rhel.7)',
+                configureArgs       : '--enable-dtrace',
+                additionalFileNameTag: 'IBM',
+                buildArgs           : '--create-jre-image'
+        ],
+
+        aarch64LinuxIBM    : [
+                os                  : 'linux',
+                arch                : 'aarch64',
+                additionalNodeLabels: 'hw.arch.aarch64 && sw.os.linux'
+                dockerImage         : 'adoptopenjdk/centos7_build_image@sha256:8947557de41e8b5fb0b0e067144b30f7771b182f0f571c12afad846aed6bc6be',
+                dockerNode          : 'sw.tool.docker',
+                dockerCredential    : '9f50c848-8764-440d-b95a-1d295c21713e',
+                test                : 'default',
+                configureArgs       : '--enable-dtrace',
+                additionalFileNameTag: 'IBM',
+                cleanWorkspaceAfterBuild: true,
+                buildArgs           : '--create-jre-image'
+        ],
+
+        aarch64MacIBM: [
+                os                  : 'mac',
+                arch                : 'aarch64',
+                additionalNodeLabels: 'hw.arch.aarch64 && sw.os.mac',
+                cleanWorkspaceAfterBuild: true,
+                test                : 'default',
+                configureArgs       : '--enable-dtrace --disable-warnings-as-errors --with-noncompressedrefs',
+                additionalFileNameTag: 'IBM',
+                buildArgs           : '--create-jre-image'
         ]
   ]
 
