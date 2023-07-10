@@ -2138,6 +2138,12 @@ class Build {
                                     throw new Exception("[ERROR] Controller clean workspace timeout (${buildTimeouts.CONTROLLER_CLEAN_TIMEOUT} HOURS) has been reached. Exiting...")
                                 }
                             }
+
+                            // TEMP Workaround infra issue 8157
+                            // Cuda 9.0 containers no longer supported.
+                            // Copy local Cuda-9.0 dir into the Docker build context
+                            context.sh(script: "mkdir -p cuda-9.0/nvvm && cp -r /usr/local/cuda-9.0/include cuda-9.0/ && cp -r /usr/local/cuda-9.0/nvvm/include cuda-9.0/nvvm/", returnStdout:true)
+
                             if (!("${buildConfig.DOCKER_IMAGE}".contains('rhel'))) {
                                 // Pull the docker image from DockerHub
                                 try {
