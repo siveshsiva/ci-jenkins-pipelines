@@ -222,7 +222,7 @@ class Config21 {
         x64MacIBM    : [
                 os                  : 'mac',
                 arch                : 'x64',
-                additionalNodeLabels: 'hw.arch.x86 && sw.os.mac.10_15'
+                additionalNodeLabels: 'hw.arch.x86 && sw.os.mac.10_15',
                 additionalTestLabels: '!sw.os.mac.10_11',
                 test                : 'default',
                 configureArgs       : '--enable-dtrace',
