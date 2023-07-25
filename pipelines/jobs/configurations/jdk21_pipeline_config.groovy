@@ -119,8 +119,7 @@ class Config21 {
                         openj9      : 'hw.arch.s390x && (sw.os.cent.7 || sw.os.rhel.7)'
                 ],
                 configureArgs       : [
-                        openj9      : '--enable-dtrace --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"',
-                        temurin     : '--enable-dtrace'
+                        openj9      : '--with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"'
                 ],
                 buildArgs           : [
                         'openj9'    : '--create-jre-image',
@@ -300,7 +299,6 @@ class Config21 {
                 test                : 'default',
                 cleanWorkspaceAfterBuild: true,
                 additionalNodeLabels: 'hw.arch.s390x && (sw.os.cent.7 || sw.os.rhel.7)',
-                configureArgs       : '--enable-dtrace',
                 additionalFileNameTag: 'IBM',
                 buildArgs           : '--create-jre-image'
         ],
