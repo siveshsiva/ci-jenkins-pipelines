@@ -253,14 +253,13 @@ class Config21 {
                                 "special.functional",
                                 "special.jck",
                                 "sanity.external",
-                                "sanity.functional.fips",
-                                "extended.functional.fips",
-                                "special.functional.fips",
-                                "sanity.jck.fips",
-                                "extended.jck.fips",
-                                "special.jck.fips",
-                                "sanity.openjdk.fips",
-                                "extended.openjdk.fips"
+                                "sanity.functional.fips140_2",
+                                "extended.functional.fips140_2",
+                                "sanity.jck.fips140_2",
+                                "extended.jck.fips140_2",
+                                "special.jck.fips140_2",
+                                "sanity.openjdk.fips140_2",
+                                "extended.openjdk.fips140_2"
                         ]
                 ],
                 cleanWorkspaceAfterBuild: true,
