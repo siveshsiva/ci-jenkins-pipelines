@@ -16,6 +16,9 @@ class Config21 {
                         openj9      : '--enable-dtrace --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"',
                         temurin     : '--enable-dtrace'
                 ],
+                reproducibleCompare : [
+                        'temurin'   : true
+                ],
                 buildArgs           : [
                         'openj9'    : '--create-jre-image',
                         'temurin'   : '--create-jre-image --create-sbom'
@@ -35,6 +38,8 @@ class Config21 {
                 cleanWorkspaceAfterBuild: true,
                 additionalNodeLabels: [
                         openj9      : 'hw.arch.x86 && sw.os.linux'
+                reproducibleCompare : [
+                        'temurin'   : true
                 ],
                 additionalTestLabels: [
                         openj9      : '!(sw.os.cent.6||sw.os.rhel.6)'
@@ -82,6 +87,8 @@ class Config21 {
                 test                : 'default',
                 configureArgs       : [
                         openj9      : '--with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition" --with-jdk-rc-name="IBM Semeru Runtime"'
+                reproducibleCompare : [
+                        'temurin'   : true
                 ],
                 buildArgs           : [
                         'openj9'    : '--create-jre-image',
@@ -120,6 +127,8 @@ class Config21 {
                 ],
                 configureArgs       : [
                         openj9      : '--with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"'
+                reproducibleCompare : [
+                        'temurin'   : true
                 ],
                 buildArgs           : [
                         'openj9'    : '--create-jre-image',
@@ -134,6 +143,8 @@ class Config21 {
                 cleanWorkspaceAfterBuild: true,
                 additionalNodeLabels: [
                         openj9      : 'hw.arch.ppc64le && (sw.os.cent.7 || sw.os.rhel.7)'
+                reproducibleCompare : [
+                        'temurin'   : true
                 ],
                 configureArgs       : [
                         'openj9'    : '--with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"'
@@ -159,6 +170,9 @@ class Config21 {
                         'temurin'   : '--enable-dtrace'
                 ],
                 cleanWorkspaceAfterBuild: true,
+                reproducibleCompare : [
+                        'temurin'   : true
+                ],
                 buildArgs           : [
                         'openj9'    : '--create-jre-image',
                         'temurin'   : '--create-jre-image --create-sbom'
@@ -176,6 +190,9 @@ class Config21 {
                 test                : 'default',
                 configureArgs       : [
                         openj9      : '--enable-dtrace --disable-warnings-as-errors --with-noncompressedrefs --with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"'
+                ],
+                reproducibleCompare : [
+                        'temurin'   : true
                 ],
                 buildArgs           : [
                         'openj9'    : '--create-jre-image',

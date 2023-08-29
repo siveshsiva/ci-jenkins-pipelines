@@ -657,26 +657,62 @@ class Build {
         return remoteTargets
     }
 
-    def compareReproducibleBuild() {
+    def compareReproducibleBuild(String nonDockerNodeName) {
         // Currently only enable for jdk17, linux_x64, temurin, nightly, which shouldn't affect current build
         // Move out of normal jdk** folder as it won't be regenerated automatically right now
-        def jobName = "${env.JOB_NAME}"
-        jobName = jobName.substring(jobName.lastIndexOf('/')+1)
-        jobName = "${jobName}_reproduce_compare"
-        if (getJavaVersionNumber() == 17 &&
-            buildConfig.ARCHITECTURE.contains('x64') &&
-            buildConfig.TARGET_OS.contains('linux') &&
-            buildConfig.VARIANT == 'temurin' && 
-            !Boolean.valueOf(buildConfig.RELEASE)) {
+        def buildJobName = "${env.JOB_NAME}"
+        buildJobName = buildJobName.substring(buildJobName.lastIndexOf('/')+1)
+        def comparedJobName = "${buildJobName}_reproduce_compare"
+        if (!Boolean.valueOf(buildConfig.RELEASE)) {
             // For now set the build as independent, no need to wait for result as the build takes time
+            String helperRef = buildConfig.HELPER_REF ?: DEFAULTS_JSON['repository']['helper_ref']
+            def JobHelper = context.library(identifier: "openjdk-jenkins-helper@${helperRef}").JobHelper
+            if (!JobHelper.jobIsRunnable(comparedJobName as String)) {
+                context.node('worker') {
+                    context.println "Reproduce_compare job doesn't exist, create reproduce_compare job: ${comparedJobName}"
+                    context.jobDsl scriptText: """
+                        pipelineJob("${comparedJobName}") {
+	                        description(\'<h1>THIS IS AN AUTOMATICALLY GENERATED JOB. PLEASE DO NOT MODIFY, IT WILL BE OVERWRITTEN.</h1>\')
+
+                            definition {
+                                parameters {
+                                    stringParam("COMPARED_JOB_NUMBER", "", "Compared nightly build job number.")
+                                    stringParam("COMPARED_JOB_NAME", "", "Compared nightly build job name")
+                                    stringParam("COMPARED_AGENT", "", "Compared nightly build job agent.")
+                                    stringParam("COMPARED_JOB_PARAMS", "", "Compared nightly build job parameters")
+                                }
+                                cpsScm {
+                                    scm {
+                                        git {
+                                            remote {
+                                                url("https://github.com/adoptium/ci-jenkins-pipelines.git")
+                                            }
+                                            branch("*/master")
+                                        }
+                                        scriptPath("tools/reproduce_comparison/Jenkinsfile")
+                                        lightweight(true)
+                                    }
+                                }
+                                logRotator {
+                                    numToKeep(30)
+                                    artifactNumToKeep(10)
+                                    daysToKeep(60)
+                                    artifactDaysToKeep(10)
+                                }
+                            }
+                        }
+                    """ , ignoreExisting: false
+                }
+            }
             context.stage('Reproduce Compare') {
                 def buildParams = context.params.toString()
                 // passing buildParams multiline parameter to downstream job, double check the available method
-                context.build job: jobName,
+                context.build job: comparedJobName,
                                 propagate: false,
                                 parameters: [
                                     context.string(name: 'COMPARED_JOB_NUMBER', value: "${env.BUILD_NUMBER}"),
                                     context.string(name: 'COMPARED_JOB_NAME', value: "${env.JOB_NAME}"),
+                                    context.string(name: 'COMPARED_AGENT', value: nonDockerNodeName),
                                     context.string(name: 'COMPARED_JOB_PARAMS', value: buildParams)
                                 ],
                                 wait: false
@@ -2082,6 +2118,7 @@ class Build {
                 context.println "Executing tests: ${buildConfig.TEST_LIST}"
                 context.println "Build num: ${env.BUILD_NUMBER}"
                 context.println "File name: ${filename}"
+                
                 def enableReproducibleCompare = Boolean.valueOf(buildConfig.ENABLE_REPRODUCIBLE_COMPARE)
                 def enableTests = Boolean.valueOf(buildConfig.ENABLE_TESTS)
                 def enableInstallers = Boolean.valueOf(buildConfig.ENABLE_INSTALLERS)
@@ -2091,9 +2128,9 @@ class Build {
                 def cleanWorkspace = Boolean.valueOf(buildConfig.CLEAN_WORKSPACE)
                 def cleanWorkspaceAfter = Boolean.valueOf(buildConfig.CLEAN_WORKSPACE_AFTER)
                 def cleanWorkspaceBuildOutputAfter = Boolean.valueOf(buildConfig.CLEAN_WORKSPACE_BUILD_OUTPUT_ONLY_AFTER)
-
                 // Get branch/tag of temurin-build, ci-jenkins-pipeline and jenkins-helper repo from BUILD_CONFIGURATION or defaultsJson
                 def helperRef = buildConfig.HELPER_REF ?: DEFAULTS_JSON['repository']['helper_ref']
+                def nonDockerNodeName = ''
 
                 context.stage('queue') {
                     /* This loads the library containing two Helper classes, and causes them to be
@@ -2231,6 +2268,7 @@ class Build {
                         context.println "[NODE SHIFT] MOVING INTO JENKINS NODE MATCHING LABELNAME ${buildConfig.NODE_LABEL}..."
                         context.node(buildConfig.NODE_LABEL) {
                             addNodeToBuildDescription()
+                            nonDockerNodeName = context.NODE_NAME
                             // This is to avoid windows path length issues.
                             context.echo("checking ${buildConfig.TARGET_OS}")
                             if (buildConfig.TARGET_OS == 'windows') {
@@ -2275,7 +2313,7 @@ class Build {
 
                 // Compare reproducible build if needed
                 if (enableReproducibleCompare) {
-                    compareReproducibleBuild()
+                    compareReproducibleBuild(nonDockerNodeName)
                 }
                 // Run Smoke Tests and AQA Tests
                 if (enableTests) {
@@ -2325,7 +2363,7 @@ class Build {
                         throw new Exception("[ERROR] Installer job timeout (${buildTimeouts.INSTALLER_JOBS_TIMEOUT} HOURS) has been reached OR the downstream installer job failed. Exiting...")
                     }
                 }
-                if (buildConfig.VARIANT == "temurin") {
+                if (!env.JOB_NAME.contains('pr-tester')) {
                     try {
                         gpgSign()
                     } catch (Exception e) {

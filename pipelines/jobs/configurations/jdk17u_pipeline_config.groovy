@@ -10,6 +10,9 @@ class Config17 {
                 ],
                 test                : 'default',
                 cleanWorkspaceAfterBuild: true,
+                reproducibleCompare : [
+                        'temurin'   : true
+                ],
                 buildArgs           : [
                         'openj9'      : '--create-jre-image',
                         'temurin'     : '--create-jre-image --create-sbom'
@@ -75,9 +78,12 @@ class Config17 {
                 arch                : 'x64',
                 additionalNodeLabels: [
                         openj9 : 'ci.project.openj9 && hw.arch.x86 && sw.os.windows',
-                        temruin : 'win2012&&vs2019'
+                        temruin : 'win2022&&vs2019'
                 ],
                 cleanWorkspaceAfterBuild: true,
+                reproducibleCompare : [
+                        'temurin'   : true
+                ],
                 buildArgs           : [
                         'openj9'    : '--create-jre-image',
                         'temurin'   : '--create-jre-image --create-sbom'
@@ -100,7 +106,7 @@ class Config17 {
         x32Windows: [
                 os                  : 'windows',
                 arch                : 'x86-32',
-                additionalNodeLabels: 'win2012&&vs2019',
+                additionalNodeLabels: 'win2022&&vs2019',
                 test                : 'default',
                 buildArgs           : [
                         'temurin'   : '--jvm-variant client,server --create-jre-image --create-sbom'
@@ -136,6 +142,9 @@ class Config17 {
                 additionalNodeLabels: [
                         openj9:  'hw.arch.s390x && (sw.os.cent.7 || sw.os.rhel.7)'
                 ],
+                reproducibleCompare : [
+                        'temurin'   : true
+                ],
                 buildArgs           : [
                         'openj9'      : '--create-jre-image',
                         'temurin'   : '--create-jre-image --create-sbom'
@@ -150,6 +159,8 @@ class Config17 {
                 cleanWorkspaceAfterBuild: true,
                 additionalNodeLabels: [
                         openj9:  'hw.arch.ppc64le && (sw.os.cent.7 || sw.os.rhel.7)'
+                reproducibleCompare : [
+                        'temurin'   : true
                 ],
                 buildArgs           : [
                         'openj9'    : '--create-jre-image',
@@ -169,6 +180,8 @@ class Config17 {
                 test                : 'default',
                 additionalNodeLabels: [
                         openj9:  'hw.arch.aarch64 && sw.os.linux'
+                reproducibleCompare : [
+                        'temurin'   : true
                 ],
                 buildArgs           : [
                         'openj9'    : '--create-jre-image',
@@ -191,6 +204,9 @@ class Config17 {
                 test                : [
                         temurin : 'default',
                         openj9 : 'default'
+                ],
+                reproducibleCompare : [
+                        'temurin'   : true
                 ],
                 buildArgs           : [
                         'openj9'    : '--create-jre-image',

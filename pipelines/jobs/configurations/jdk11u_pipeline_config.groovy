@@ -67,7 +67,7 @@ class Config11 {
             arch                : 'x64',
             additionalNodeLabels: [
                     openj9:     'ci.project.openj9 && hw.arch.x86 && sw.os.windows',
-                    temurin:    'win2012&&vs2019',
+                    temurin:    'win2022&&vs2019',
                     dragonwell: 'win2012'
             ],
             test                : 'default',
@@ -83,7 +83,7 @@ class Config11 {
         x32Windows: [
             os                  : 'windows',
             arch                : 'x86-32',
-            additionalNodeLabels: 'win2012',
+            additionalNodeLabels: 'win2022&&vs2019',
             buildArgs : [
                     temurin : '--jvm-variant client,server --create-sbom'
             ],

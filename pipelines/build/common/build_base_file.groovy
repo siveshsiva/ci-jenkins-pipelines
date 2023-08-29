@@ -721,7 +721,7 @@ class Builder implements Serializable {
     e.g: 
     nightly:    build-scripts/jobs/jdk11u/jdk11u-linux-aarch64-temurin
     evaluation:  build-scripts/jobs/evaluation/jobs/jdk17u/jdk17u-evaluation-mac-x64-openj9
-    release:    build-scripts/jobs/release/jobs/jdk20/jdk20-release-aix-ppc64-temurin
+    release:    build-scripts/jobs/release/jobs/jdk21/jdk21-release-aix-ppc64-temurin
     */
     def getJobFolder() {
         def parentDir = currentBuild.fullProjectName.substring(0, currentBuild.fullProjectName.lastIndexOf('/'))
@@ -977,12 +977,12 @@ class Builder implements Serializable {
                 jobs[configuration.key] = {
                     IndividualBuildConfig config = configuration.value
 
-                    // jdk20-linux-x64-temurin
+                    // jdk21-linux-x64-temurin
                     def jobTopName = getJobName(configuration.key)
                     def jobFolder = getJobFolder()
                     /*
-                        build-scripts/jobs/jdk20/jdk20-linux-x64-temurin for nightly
-                        build-scripts/evaluation/jobs/jdk20/jdk20-evaluation-linux-aarch64-hotspot for evaluation
+                        build-scripts/jobs/jdk21/jdk21-linux-x64-temurin for nightly
+                        build-scripts/evaluation/jobs/jdk21/jdk21-evaluation-linux-aarch64-hotspot for evaluation
                     */
                     def downstreamJobName = "${jobFolder}/${jobTopName}"
                     context.echo 'build name ' + downstreamJobName
@@ -1097,13 +1097,19 @@ class Builder implements Serializable {
                             }
                             context.println '[NODE SHIFT] OUT OF CONTROLLER NODE!'
 
-                            if ((downstreamJob.getResult() != 'SUCCESS' || !copyArtifactSuccess) && propagateFailures) {
-                                context.error("Propagating downstream job result: ${downstreamJobName}, Result: "+downstreamJob.getResult()+" CopyArtifactsSuccess: "+copyArtifactSuccess)
-                                if (copyArtifactSuccess && downstreamJob.getResult() == 'UNSTABLE' && (currentBuild.result == 'SUCCESS' || currentBuild.result == 'UNSTABLE' )) {
-                                    currentBuild.result = 'UNSTABLE'
+                            if (propagateFailures) {
+                                String previousPipelineStatus = currentBuild.result
+                                context.println("Propagating downstream job result: ${downstreamJobName}, Result: "+downstreamJob.getResult()+" CopyArtifactsSuccess: "+copyArtifactSuccess)
+                                if (copyArtifactSuccess) {
+                                    // currentBuild.result only allows itself to be set if the new status is worse than its current status.
+                                    // So FAILURE overrides UNSTABLE, and UNSTABLE overrides SUCCESS.
+                                    context.println("Attempting to set pipeline result to \""+downstreamJob.getResult()+"\".")
+                                    currentBuild.result = downstreamJob.getResult()
                                 } else {
+                                    context.println("Attempting to set pipeline result to \"FAILURE\".")
                                     currentBuild.result = 'FAILURE'
                                 }
+                                context.println("Attempt complete. Pipeline status was \""+previousPipelineStatus+"\", and is now \""+currentBuild.result+"\".")
                             }
                         }
                     }
