@@ -129,6 +129,7 @@ class Config21 {
                 ],
                 configureArgs       : [
                         openj9      : '--with-product-name="IBM Semeru Runtime" --with-product-suffix="Open Edition"'
+                ],
                 reproducibleCompare : [
                         'temurin'   : true
                 ],
