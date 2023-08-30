@@ -146,6 +146,7 @@ class Config21 {
                 cleanWorkspaceAfterBuild: true,
                 additionalNodeLabels: [
                         openj9      : 'hw.arch.ppc64le && (sw.os.cent.7 || sw.os.rhel.7)'
+                ],
                 reproducibleCompare : [
                         'temurin'   : true
                 ],
