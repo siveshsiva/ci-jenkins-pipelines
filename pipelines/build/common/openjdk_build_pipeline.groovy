@@ -381,8 +381,8 @@ class Build {
                     context.stage("${testType}") {
                         def isFipsTestBuild = false
                         def rerunIterations = '3'
-                        if ("${testType}".contains(".fips")) {
-                            testType = testType.replace(".fips","")
+                        if ("${testType}".contains(".fips140_2")) {
+                            testType = testType.replace(".fips140_2","")
                             isFipsTestBuild = true
                             rerunIterations = '0'
                         }
@@ -448,8 +448,8 @@ class Build {
 
                         def testFlag = ''
                         if (isFipsTestBuild) {
-                            jobParams.put('TEST_JOB_NAME', "${jobParams.TEST_JOB_NAME}_fips")
-                            testFlag = 'FIPS'
+                            jobParams.put('TEST_JOB_NAME', "${jobParams.TEST_JOB_NAME}_fips140_2")
+                            testFlag = 'FIPS140_2'
                         }
                         def parallel = 'None'
                         def numMachinesPerTest = ''
