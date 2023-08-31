@@ -181,6 +181,7 @@ class Config17 {
                 test                : 'default',
                 additionalNodeLabels: [
                         openj9:  'hw.arch.aarch64 && sw.os.linux'
+                ],
                 reproducibleCompare : [
                         'temurin'   : true
                 ],
