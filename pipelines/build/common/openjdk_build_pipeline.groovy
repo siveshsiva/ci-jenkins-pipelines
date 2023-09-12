@@ -309,7 +309,7 @@ class Build {
 
         // Use BUILD_REF override if specified
         vendorTestBranches = buildConfig.BUILD_REF ?: vendorTestBranches
-        
+
         try {
             context.println 'Running smoke test'
             context.stage('smoke test') {
@@ -340,7 +340,7 @@ class Build {
                             context.string(name: 'VENDOR_TEST_REPOS', value: vendorTestRepos),
                             context.string(name: 'VENDOR_TEST_BRANCHES', value: vendorTestBranches),
                             context.string(name: 'TIME_LIMIT', value: '1')
-                    ]            
+                    ]
                 currentBuild.result = testJob.getResult()
                 return testJob.getResult()
 
@@ -359,7 +359,7 @@ class Build {
         def jdkBranch = getJDKBranch()
         def jdkRepo = getJDKRepo()
         def openj9Branch = (buildConfig.SCM_REF && buildConfig.VARIANT == 'openj9') ? buildConfig.SCM_REF : 'master'
- 
+
         List testList = buildConfig.TEST_LIST
         List dynamicList = buildConfig.DYNAMIC_LIST
         List numMachines = buildConfig.NUM_MACHINES
@@ -615,7 +615,7 @@ class Build {
             }
         }
 
-        targets.each { targetMode, targetTests -> 
+        targets.each { targetMode, targetTests ->
             try {
                 context.println "Remote trigger: ${targetTests}"
                 remoteTargets["${targetTests}"] = {
@@ -1823,6 +1823,7 @@ class Build {
                                                 echo "Signing JMOD files"
                                                 TMP_DIR="${macos_base_path}/"
                                                 ENTITLEMENTS="$WORKSPACE/entitlements.plist"
+                                                MACSIGNSTRING="Apple Certification Authority"
                                                 FILES=$(find "${TMP_DIR}" -perm +111 -type f -o -name '*.dylib'  -type f || find "${TMP_DIR}" -perm /111 -type f -o -name '*.dylib'  -type f)
                                                 for f in $FILES
                                                 do
@@ -1830,9 +1831,44 @@ class Build {
                                                     dir=$(dirname "$f")
                                                     file=$(basename "$f")
                                                     mv "$f" "${dir}/unsigned_${file}"
-                                                    curl -o "$f" -F file="@${dir}/unsigned_${file}" -F entitlements="@$ENTITLEMENTS" https://cbi.eclipse.org/macos/codesign/sign
-                                                    chmod --reference="${dir}/unsigned_${file}" "$f"
-                                                    rm -rf "${dir}/unsigned_${file}"
+                                                    curl --fail --silent --show-error -o "$f" -F file="@${dir}/unsigned_${file}" -F entitlements="@$ENTITLEMENTS" https://cbi.eclipse.org/macos/codesign/sign
+                                                    echo File = "$f"
+                                                    TESTMACSIGN=$(grep -ic "$MACSIGNSTRING" "$f")
+                                                    echo Sign Result = "$TESTMACSIGN"
+                                                    if [ "$TESTMACSIGN" -gt 0 ]
+                                                    then
+                                                      echo "Code Signed For File $f"
+                                                      chmod --reference="${dir}/unsigned_${file}" "$f"
+                                                      rm -rf "${dir}/unsigned_${file}"
+                                                    else
+                                                      max_iterations=20
+                                                      iteration=1
+                                                      success=false
+                                                      echo "Code Not Signed For File $f"
+                                                      while [ $iteration -le $max_iterations ] && [ $success = false ]; do
+                                                        echo $iteration Of $max_iterations
+                                                        sleep 1
+                                                          curl --fail -o "$f" -F file="@${dir}/unsigned_${file}" -F entitlements="@$ENTITLEMENTS" https://cbi.eclipse.org/macos/codesign/sign
+                                                          TESTMACSIGN2=$(grep -ic "$MACSIGNSTRING" "$f")
+                                                          echo TESTMACSIGN2 = "$TESTMACSIGN2"
+                                                          if [ "$TESTMACSIGN2" -gt 0 ]
+                                                          then
+                                                            echo "$f Signed OK On Attempt $iteration"
+                                                            chmod --reference="${dir}/unsigned_${file}" "$f"
+                                                            rm -rf "${dir}/unsigned_${file}"
+                                                            success=true
+                                                          else
+                                                            echo "$f Failed Signing On Attempt $iteration"
+                                                            success=false
+                                                            iteration=$((iteration+1))
+                                                            if [ $iteration -gt $max_iterations ]
+                                                            then
+                                                              echo "Errors Encountered During Signing"
+                                                              exit 1
+                                                            fi
+                                                          fi
+                                                      done
+                                                    fi
                                                 done
                                             '''
                                             // groovylint-enable
@@ -2066,7 +2102,7 @@ class Build {
         }
     }
 
-    /* 
+    /*
         this function should only be used in pr-tester
     */
     def updateGithubCommitStatus(STATE, MESSAGE) {
@@ -2118,7 +2154,7 @@ class Build {
                 context.println "Executing tests: ${buildConfig.TEST_LIST}"
                 context.println "Build num: ${env.BUILD_NUMBER}"
                 context.println "File name: ${filename}"
-                
+
                 def enableReproducibleCompare = Boolean.valueOf(buildConfig.ENABLE_REPRODUCIBLE_COMPARE)
                 def enableTests = Boolean.valueOf(buildConfig.ENABLE_TESTS)
                 def enableInstallers = Boolean.valueOf(buildConfig.ENABLE_INSTALLERS)
