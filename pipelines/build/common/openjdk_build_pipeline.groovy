@@ -418,7 +418,7 @@ class Build {
                         def DOCKER_REGISTRY_URL = ''
                         def DOCKER_REGISTRY_URL_CREDENTIAL_ID = ''
                         if ("${testType}".contains('external')) {
-                            DOCKER_REGISTRY_URL = 'sys-rt-docker-local.artifactory.swg-devops.com'
+                            DOCKER_REGISTRY_URL = 'docker-na.artifactory.swg-devops.com/sys-rt-docker-local'
                             DOCKER_REGISTRY_URL_CREDENTIAL_ID = artifactoryCredential
                             rerunIterations = '0'
                         }
