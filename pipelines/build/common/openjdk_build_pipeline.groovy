@@ -2224,11 +2224,6 @@ class Build {
                                     throw new Exception("[ERROR] Controller docker file scm checkout timeout (${buildTimeouts.DOCKER_CHECKOUT_TIMEOUT} HOURS) has been reached. Exiting...")
                                 }
 
-                                // TEMP Workaround infra issue 8157
-                                // Cuda 9.0 containers no longer supported.
-                                // Copy local Cuda-9.0 dir into the Docker build context
-                                context.sh(script: "mkdir -p cuda-9.0/nvvm && cp -r /usr/local/cuda-9.0/include cuda-9.0/ && cp -r /usr/local/cuda-9.0/nvvm/include cuda-9.0/nvvm/", returnStdout:true)
-
                                 context.docker.build("build-image", "--build-arg image=${buildConfig.DOCKER_IMAGE} -f ${buildConfig.DOCKER_FILE} .").inside(buildConfig.DOCKER_ARGS) {
                                     buildScripts(
                                         cleanWorkspace,
