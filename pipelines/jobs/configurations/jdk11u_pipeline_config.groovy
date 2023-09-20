@@ -423,6 +423,7 @@ class Config11 {
                         'special.system'
                     ],
                     weekly : [
+                        'dev.external',
                         'extended.openjdk',
                         'extended.perf',
                         'extended.jck',
