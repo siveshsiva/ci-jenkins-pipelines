@@ -1010,6 +1010,8 @@ class Build {
                         context.string(name: 'PRODUCT_CATEGORY', value: "${category}"),
                         context.string(name: 'JVM', value: "${buildConfig.VARIANT}"),
                         context.string(name: 'ARCH', value: "${INSTALLER_ARCH}"),
+                        context.string(name: 'SCM_REPO', value: (DEFAULTS_JSON['repository']['installer_url'] ?: '')),
+                        context.string(name: 'SCM_BRANCH', value: (DEFAULTS_JSON['repository']['installer_branch'] ?: '')),
                         ['$class': 'LabelParameterValue', name: 'NODE_LABEL', label: "${nodeFilter}"]
                 ]
         context.copyArtifacts(
